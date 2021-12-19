@@ -11,93 +11,95 @@ library(tidyverse)
 # read in the train data for exploration
 crypto_train = read_csv("/Users/ArpanBagui/Documents/UPenn/Classes/stat-471-final/Data/clean/crypto_train.csv")
 
-# create histogram of coin prices for each test coin
+# create boxplot of coin prices for each test coin to see distribution
 #ethereum
 p1 = crypto_train %>% filter(coin_name == "ethereum") %>%
-  ggplot(aes(x = price)) +
-  geom_histogram(bins = 30) +
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
   labs(x = "Ethereum Price ($)", 
-       y = "Count") +
+       y = " ") +
   theme_bw()
 
 #cardano
 p2 = crypto_train %>% filter(coin_name == "cardano") %>%
-  ggplot(aes(x = price)) +
-  geom_histogram(bins = 30) +
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
   labs(x = "Cardano Price ($)", 
-       y = "Count") +
+       y = " ") +
   theme_bw()
 
 #ripple
 p3 = crypto_train %>% filter(coin_name == "ripple") %>%
-  ggplot(aes(x = price)) +
-  geom_histogram(bins = 30) +
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
   labs(x = "Ripple Price ($)", 
-       y = "Count") +
+       y = " ") +
   theme_bw()
 
 #dogecoin
 p4 = crypto_train %>% filter(coin_name == "dogecoin") %>%
-  ggplot(aes(x = price)) +
-  geom_histogram(bins = 30) +
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
   labs(x = "Dogecoin Price ($)", 
-       y = "Count") +
+       y = " ") +
   theme_bw()
 
 #chainlink
 p5 = crypto_train %>% filter(coin_name == "chainlink") %>%
-  ggplot(aes(x = price)) +
-  geom_histogram(bins = 30) +
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
   labs(x = "Chainlink Price ($)", 
-       y = "Count") +
+       y = " ") +
   theme_bw()
 
 #monero
 p6 = crypto_train %>% filter(coin_name == "monero") %>%
-  ggplot(aes(x = price)) +
-  geom_histogram(bins = 30) +
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
   labs(x = "Monero Price ($)", 
-       y = "Count") +
+       y = " ") +
   theme_bw()
 
 #filecoin
 p7 = crypto_train %>% filter(coin_name == "filecoin") %>%
-  ggplot(aes(x = price)) +
-  geom_histogram(bins = 30) +
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
   labs(x = "Filecoin Price ($)", 
-       y = "Count") +
+       y = " ") +
   theme_bw()
 
 #tezos
 p8 = crypto_train %>% filter(coin_name == "tezos") %>%
-  ggplot(aes(x = price)) +
-  geom_histogram(bins = 30) +
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
   labs(x = "Tezos Price ($)", 
-       y = "Count") +
+       y = " ") +
   theme_bw()
 
 #stellar
 p9 = crypto_train %>% filter(coin_name == "stellar") %>%
-  ggplot(aes(x = price)) +
-  geom_histogram(bins = 30) +
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
   labs(x = "Stellar Price ($)", 
-       y = "Count") +
+       y = " ") +
   theme_bw()
 
 # combine the plots
 price_hists = cowplot::plot_grid(p1, p2, p3, p4, p5, p6, p7, p8, p9, nrow = 3)
 
-# save the histogram
-ggsave(filename = "../Results/coin-price-histogram.png", 
+# save the boxplots
+ggsave(filename = "../Results/coin-price-boxplots.png", 
        plot = price_hists, 
        device = "png", 
        width = 10, 
        height = 6)
 ```
 
-```{r likes-scatterplots}
-#examining 3 test coins and their relationship to reddit upvotes, twitter favorites, and youtube likes
+```{r likes-scatterplots-1}
+#examining test coins and their relationship to reddit upvotes, twitter favorites, and youtube likes
 #this may give us a feel of which social media has a stronger relationship with price
+
+#starting with first three
 
 #ethereum reddit
 p1 = crypto_train %>% filter(coin_name == "ethereum") %>%
@@ -105,7 +107,7 @@ p1 = crypto_train %>% filter(coin_name == "ethereum") %>%
   geom_point() + 
   scale_y_log10() +
   geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
-  labs(x = "Average Reddit Upvotes on r/ethereum", 
+  labs(x = "Reddit Upvotes on r/ethereum", 
        y = "Price",
        title = "Ethereum Reddit") +
   theme_bw() + 
@@ -117,7 +119,7 @@ p2 = crypto_train %>% filter(coin_name == "ethereum") %>%
   geom_point() + 
   scale_y_log10() +
   geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
-  labs(x = "Average Twitter Favorites for top Ethereum tweets", 
+  labs(x = "Twitter Favorites on Top Tweets", 
        y = "Price",
        title = "Ethereum Twitter") +
   theme_bw() + 
@@ -129,7 +131,7 @@ p3 = crypto_train %>% filter(coin_name == "ethereum") %>%
   geom_point() + 
   scale_y_log10() +
   geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
-  labs(x = "Average Youtube Likes for top Ethereum Videos", 
+  labs(x = "Youtube Likes on Top Videos", 
        y = "Price",
        title = "Ethereum Youtube") +
   theme_bw() + 
@@ -141,7 +143,7 @@ p4 = crypto_train %>% filter(coin_name == "cardano") %>%
   geom_point() + 
   scale_y_log10() +
   geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
-  labs(x = "Average Reddit Upvotes on r/cardano", 
+  labs(x = "Reddit Upvotes on r/cardano", 
        y = "Price",
        title = "Cardano Reddit") +
   theme_bw() + 
@@ -153,7 +155,7 @@ p5 = crypto_train %>% filter(coin_name == "cardano") %>%
   geom_point() + 
   scale_y_log10() +
   geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
-  labs(x = "Average Twitter Favorites for top Cardano tweets", 
+  labs(x = "Twitter Favorites on Top Tweets", 
        y = "Price",
        title = "Cardano Twitter") +
   theme_bw() + 
@@ -165,7 +167,7 @@ p6 = crypto_train %>% filter(coin_name == "cardano") %>%
   geom_point() + 
   scale_y_log10() +
   geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
-  labs(x = "Average Youtube Likes for top Cardano Videos", 
+  labs(x = "Youtube Likes on Top Videos", 
        y = "Price",
        title = "Cardano Youtube") +
   theme_bw() + 
@@ -177,7 +179,7 @@ p7 = crypto_train %>% filter(coin_name == "dogecoin") %>%
   geom_point() + 
   scale_y_log10() +
   geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
-  labs(x = "Average Reddit Upvotes on r/dogecoin", 
+  labs(x = "Reddit Upvotes on r/dogecoin", 
        y = "Price",
        title = "Dogecoin Reddit") +
   theme_bw() + 
@@ -189,7 +191,7 @@ p8 = crypto_train %>% filter(coin_name == "dogecoin") %>%
   geom_point() + 
   scale_y_log10() +
   geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
-  labs(x = "Average Twitter Favorites for top Dogecoin tweets", 
+  labs(x = "Twitter Favorites on Top Tweets", 
        y = "Price",
        title = "Dogecoin Twitter") +
   theme_bw() + 
@@ -201,7 +203,7 @@ p9 = crypto_train %>% filter(coin_name == "dogecoin") %>%
   geom_point() + 
   scale_y_log10() +
   geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
-  labs(x = "Average Youtube Likes for top Dogecoin Videos", 
+  labs(x = "Youtube Likes on Top Videos", 
        y = "Price",
        title = "Dogecoin Youtube") +
   theme_bw() + 
@@ -212,6 +214,128 @@ price_scatterplots = cowplot::plot_grid(p1, p2, p3, p4, p5, p6, p7, p8, p9, nrow
 
 # save the scatterplots
 ggsave(filename = "../Results/coin-price-scatterplots.png", 
+       plot = price_scatterplots, 
+       device = "png", 
+       width = 10, 
+       height = 6)
+```
+
+```{r likes-scatterplots-2}
+#next three coins
+
+#ripple reddit
+p1 = crypto_train %>% filter(coin_name == "ripple") %>%
+  ggplot(aes(x = r_upvotes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
+  labs(x = "Reddit Upvotes on r/ripple", 
+       y = "Price",
+       title = "Ripple Reddit") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#ripple twitter
+p2 = crypto_train %>% filter(coin_name == "ripple") %>%
+  ggplot(aes(x = t_favorites, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
+  labs(x = "Twitter Favorites on Top Tweets", 
+       y = "Price",
+       title = "Ripple Twitter") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#ripple youtube
+p3 = crypto_train %>% filter(coin_name == "ripple") %>%
+  ggplot(aes(x = y_likes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
+  labs(x = "Youtube Likes on Top Videos", 
+       y = "Price",
+       title = "Ripple Youtube") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#chainlink reddit
+p4 = crypto_train %>% filter(coin_name == "chainlink") %>%
+  ggplot(aes(x = r_upvotes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
+  labs(x = "Reddit Upvotes on r/chainlink", 
+       y = "Price",
+       title = "Chainlink Reddit") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#chainlink twitter
+p5 = crypto_train %>% filter(coin_name == "chainlink") %>%
+  ggplot(aes(x = t_favorites, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
+  labs(x = "Twitter Favorites on Top Tweets", 
+       y = "Price",
+       title = "Chainlink Twitter") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#chainlink youtube
+p6 = crypto_train %>% filter(coin_name == "chainlink") %>%
+  ggplot(aes(x = y_likes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
+  labs(x = "Youtube Likes on Top Videos", 
+       y = "Price",
+       title = "Chainlink Youtube") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#monero reddit
+p7 = crypto_train %>% filter(coin_name == "monero") %>%
+  ggplot(aes(x = r_upvotes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
+  labs(x = "Reddit Upvotes on r/monero", 
+       y = "Price",
+       title = "Monero Reddit") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#monero twitter
+p8 = crypto_train %>% filter(coin_name == "monero") %>%
+  ggplot(aes(x = t_favorites, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
+  labs(x = "Twitter Favorites on Top Tweets", 
+       y = "Price",
+       title = "Monero Twitter") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#monero youtube
+p9 = crypto_train %>% filter(coin_name == "monero") %>%
+  ggplot(aes(x = y_likes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
+  labs(x = "Youtube Likes on Top Videos", 
+       y = "Price",
+       title = "Monero Youtube") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+# combine the plots
+price_scatterplots = cowplot::plot_grid(p1, p2, p3, p4, p5, p6, p7, p8, p9, nrow = 3)
+
+# save the scatterplots
+ggsave(filename = "../Results/coin-price-scatterplots-2.png", 
        plot = price_scatterplots, 
        device = "png", 
        width = 10, 
