@@ -1,0 +1,16 @@
+---
+title: "1 - Exploration.R"
+---
+
+```{r}
+# load libraries
+library(kableExtra)                     # for printing tables
+library(cowplot)                        # for side by side plots
+library(tidyverse)
+
+# read in the cleaned data
+crypto_data = read_csv("/Users/ArpanBagui/Documents/UPenn/Classes/stat-471-final/Data/clean/crypto_data_clean.csv")
+
+crypto_data
+
+```
