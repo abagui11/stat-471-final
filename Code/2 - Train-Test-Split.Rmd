@@ -1,0 +1,18 @@
+---
+title: "2 - Test-Train-Split"
+---
+
+```{r}
+# read in the cleaned data
+crypto_data = read_csv("/Users/ArpanBagui/Documents/UPenn/Classes/stat-471-final/Data/clean/crypto_data_clean.csv")
+
+# split into train and test (set seed here if applicable)
+test_coins = c("bitcoin", "algorand")
+crypto_train = crypto_data %>% filter(!(coin_name %in% test_coins))
+crypto_test = crypto_data %>% filter(coin_name %in% test_coins)
+
+# save the train and test data
+write_csv(x = crypto_train, file = "../Data/clean/crypto_train.csv")
+
+write_csv(x = crypto_test, file = "../Data/clean/crypto_test.csv")
+```
