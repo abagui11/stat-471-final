@@ -2,11 +2,12 @@
 title: "1 - Exploration.R"
 ---
 
-```{r coin-price-histograms}
+```{r coin-price-boxplots}
 # load libraries
 library(kableExtra)                     # for printing tables
 library(cowplot)                        # for side by side plots
 library(tidyverse)
+library(corrplot)                       #For correlation matrix
 
 # read in the train data for exploration
 crypto_train = read_csv("/Users/ArpanBagui/Documents/UPenn/Classes/stat-471-final/Data/clean/crypto_train.csv")
@@ -84,8 +85,24 @@ p9 = crypto_train %>% filter(coin_name == "stellar") %>%
        y = " ") +
   theme_bw()
 
+#algorand
+p10 = crypto_train %>% filter(coin_name == "algorand") %>%
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
+  labs(x = "Algorand Price ($)", 
+       y = " ") +
+  theme_bw()
+
+#bitcoin
+p11 = crypto_train %>% filter(coin_name == "bitcoin") %>%
+  ggplot(aes(x = price, y = "price")) +
+  geom_boxplot() +
+  labs(x = "Bitcoin Price ($)", 
+       y = " ") +
+  theme_bw()
+
 # combine the plots
-price_hists = cowplot::plot_grid(p1, p2, p3, p4, p5, p6, p7, p8, p9, nrow = 3)
+price_hists = cowplot::plot_grid(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, nrow = 3)
 
 # save the boxplots
 ggsave(filename = "../Results/coin-price-boxplots.png", 
@@ -453,8 +470,80 @@ p9 = crypto_train %>% filter(coin_name == "stellar") %>%
   theme_bw() + 
   theme(plot.title = element_text(hjust = 0.5))
 
+#algorand reddit
+p10 = crypto_train %>% filter(coin_name == "algorand") %>%
+  ggplot(aes(x = r_upvotes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
+  labs(x = "Reddit Upvotes on r/algorand", 
+       y = "Price",
+       title = "Algorand Reddit") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#algorand twitter
+p11 = crypto_train %>% filter(coin_name == "algorand") %>%
+  ggplot(aes(x = t_favorites, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
+  labs(x = "Twitter Favorites on Top Tweets", 
+       y = "Price",
+       title = "Algorand Twitter") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#algorand youtube
+p12 = crypto_train %>% filter(coin_name == "algorand") %>%
+  ggplot(aes(x = y_likes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
+  labs(x = "Youtube Likes on Top Videos", 
+       y = "Price",
+       title = "Algorand Youtube") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#bitcoin reddit
+p13 = crypto_train %>% filter(coin_name == "bitcoin") %>%
+  ggplot(aes(x = r_upvotes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
+  labs(x = "Reddit Upvotes on r/bitcoin", 
+       y = "Price",
+       title = "Bitcoin Reddit") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#bitcoin twitter
+p14 = crypto_train %>% filter(coin_name == "bitcoin") %>%
+  ggplot(aes(x = t_favorites, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
+  labs(x = "Twitter Favorites on Top Tweets", 
+       y = "Price",
+       title = "Bitcoin Twitter") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#bitcoin youtube
+p15 = crypto_train %>% filter(coin_name == "bitcoin") %>%
+  ggplot(aes(x = y_likes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
+  labs(x = "Youtube Likes on Top Videos", 
+       y = "Price",
+       title = "Bitcoin Youtube") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
 # combine the plots
-price_scatterplots = cowplot::plot_grid(p1, p2, p3, p4, p5, p6, p7, p8, p9, nrow = 3)
+price_scatterplots = cowplot::plot_grid(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15,  nrow = 3)
 
 # save the scatterplots
 ggsave(filename = "../Results/coin-price-scatterplots-3.png", 
@@ -463,3 +552,36 @@ ggsave(filename = "../Results/coin-price-scatterplots-3.png",
        width = 10, 
        height = 6)
 ```
+
+```{r correlation matrices}
+# correlation matrix of Reddit variables
+reddit = cor(crypto_train[1:5])
+round(reddit, 2)
+
+reddit_matrix = corrplot(reddit, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45) 
+
+# correlation matrix of Twitter variables
+twitter = cor(crypto_train[6:9])
+round(twitter, 2)
+
+twitter_matrix = corrplot(twitter, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+# correlation matrix of Youtube variables
+youtube = cor(crypto_train[10:14])
+round(youtube, 2)
+
+youtube_matrix = corrplot(youtube, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+
+#create correlation matrix of all variables
+res = cor(crypto_train[1:14])
+round(res, 2)
+
+all = corrplot(res, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+```
+

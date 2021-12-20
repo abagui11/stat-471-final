@@ -1,16 +1,114 @@
 ---
 title: "3 - Regression Modeling"
-output: html_notebook
 ---
 
 ```{r}
 library(glmnet)
 library(glmnetUtils)
+library(kableExtra)
 
-ridgefit = cv.glmnet(price ~ .,
-                     alpha = 0,
-                     nfolds = 10,
-                     data = crypto_train)
+#removing coin name feature because we won't use it to predict
+crypto_train = crypto_train %>% select(-coin_name)
 ```
 
+### Ordinary least squares
+
+```{r}
+#Running a linear regression on college_train
+lm_fit = lm(price ~ ., 
+                       data = crypto_train)
+#Getting its summary
+summary(lm_fit)
+```
+**The features explain 0.98 of the variation of the response based on the R-Squared value that was obtained in the linear fit above.**
+
+### Ridge regression
+
+```{r}
+ridge_fit = cv.glmnet(price ~ .,  # formula notation, as usual
+                      alpha = 0,                 # alpha = 0 for ridge
+                      nfolds = 10,               # number of folds
+                      data = crypto_train)   # data to run ridge on
+```
+
+```{r cv-error-ridge}
+ridge_plot = plot(ridge_fit) #plotting cv error
+
+ggsave(filename = "../Results/ridge-MSE.png", 
+       plot = ridge_plot, 
+       device = "png", 
+       width = 5, 
+       height = 3)
+```
+
+
+**Based on the code chunk above the value of the selected lambda by the one standard error rule is 1860*
+
+
+```{r ridge-coefficients"}
+#Visualizing fitted coefficients
+ridge_glmnet = plot_glmnet(ridge_fit, crypto_train, features_to_plot = 6)
+
+ggsave(filename = "../Results/ridge-glmnet.png", 
+       plot = ridge_plot, 
+       device = "png", 
+       width = 5, 
+       height = 3)
+```
+### Lasso regression
+
+```{r cv-error-lasso}
+
+lasso_fit = cv.glmnet(price ~ .,  # formula notation, as usual
+                      alpha = 1,                 # alpha = 1 for lasso
+                      nfolds = 10,               # number of folds
+                      data = crypto_train)   # data to run ridge on
+
+lasso_plot = plot(lasso_fit) #plotting cv plot
+
+ggsave(filename = "../Results/lasso-MSE.png", 
+       plot = lasso_plot, 
+       device = "png", 
+       width = 5, 
+       height = 3)
+```
+
+```{r lasso-coefficients}
+#Visualizing fitted coefficients
+lasso_glmnet = plot_glmnet(lasso_fit, crypto_train, features_to_plot = 6)
+
+ggsave(filename = "../Results/lasso-glmnet.png", 
+       plot = lasso_glmnet, 
+       device = "png", 
+       width = 5, 
+       height = 3)
+```
+
+### Test set evaluation
+
+```{r}
+linear_predictions = predict(lm_fit, 
+                            newdata = crypto_test) %>% as.numeric()
+RMSE1 = sqrt(mean((linear_predictions - crypto_test$price)^2))
+RMSE1
+```
+**RMSE1 = 2327.876**
+
+```{r}
+ridge_predictions = predict(ridge_fit, 
+                            newdata = crypto_test,
+                            s = "lambda.1se") %>% as.numeric()
+RMSE2 = sqrt(mean((ridge_predictions - crypto_test$price)^2))
+RMSE2
+```
+**RMSE2 = 39293.6*
+
+```{r}
+lasso_predictions = predict(lasso_fit, 
+                            newdata = crypto_test,
+                            s = "lambda.1se") %>% as.numeric()
+RMSE3 = sqrt(mean((lasso_predictions - crypto_test$price)^2))
+RMSE3
+```
+**RMSE3 = 2634.94**
 
