@@ -1,0 +1,16 @@
+---
+title: "3 - Regression Modeling"
+output: html_notebook
+---
+
+```{r}
+library(glmnet)
+library(glmnetUtils)
+
+ridgefit = cv.glmnet(price ~ .,
+                     alpha = 0,
+                     nfolds = 10,
+                     data = crypto_train)
+```
+
+

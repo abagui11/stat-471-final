@@ -341,3 +341,125 @@ ggsave(filename = "../Results/coin-price-scatterplots-2.png",
        width = 10, 
        height = 6)
 ```
+
+```{r likes-scatterplots-3}
+#final three coins
+
+#filecoin reddit
+p1 = crypto_train %>% filter(coin_name == "filecoin") %>%
+  ggplot(aes(x = r_upvotes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
+  labs(x = "Reddit Upvotes on r/filecoin", 
+       y = "Price",
+       title = "Filecoin Reddit") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#filecoin twitter
+p2 = crypto_train %>% filter(coin_name == "filecoin") %>%
+  ggplot(aes(x = t_favorites, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
+  labs(x = "Twitter Favorites on Top Tweets", 
+       y = "Price",
+       title = "Filecoin Twitter") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#filecoin youtube
+p3 = crypto_train %>% filter(coin_name == "filecoin") %>%
+  ggplot(aes(x = y_likes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
+  labs(x = "Youtube Likes on Top Videos", 
+       y = "Price",
+       title = "Filecoin Youtube") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#tezos reddit
+p4 = crypto_train %>% filter(coin_name == "tezos") %>%
+  ggplot(aes(x = r_upvotes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
+  labs(x = "Reddit Upvotes on r/tezos", 
+       y = "Price",
+       title = "Tezos Reddit") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#tezos twitter
+p5 = crypto_train %>% filter(coin_name == "tezos") %>%
+  ggplot(aes(x = t_favorites, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
+  labs(x = "Twitter Favorites on Top Tweets", 
+       y = "Price",
+       title = "Tezos Twitter") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#tezos youtube
+p6 = crypto_train %>% filter(coin_name == "tezos") %>%
+  ggplot(aes(x = y_likes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
+  labs(x = "Youtube Likes on Top Videos", 
+       y = "Price",
+       title = "Tezos Youtube") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#stellar reddit
+p7 = crypto_train %>% filter(coin_name == "stellar") %>%
+  ggplot(aes(x = r_upvotes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "orange") +
+  labs(x = "Reddit Upvotes on r/stellar", 
+       y = "Price",
+       title = "Stellar Reddit") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#stellar twitter
+p8 = crypto_train %>% filter(coin_name == "stellar") %>%
+  ggplot(aes(x = t_favorites, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "light blue") +
+  labs(x = "Twitter Favorites on Top Tweets", 
+       y = "Price",
+       title = "Stellar Twitter") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+#stellar youtube
+p9 = crypto_train %>% filter(coin_name == "stellar") %>%
+  ggplot(aes(x = y_likes, y = price)) +
+  geom_point() + 
+  scale_y_log10() +
+  geom_smooth(method = "lm", formula = "y~x", se = FALSE, color = "red") +
+  labs(x = "Youtube Likes on Top Videos", 
+       y = "Price",
+       title = "Stellar Youtube") +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+# combine the plots
+price_scatterplots = cowplot::plot_grid(p1, p2, p3, p4, p5, p6, p7, p8, p9, nrow = 3)
+
+# save the scatterplots
+ggsave(filename = "../Results/coin-price-scatterplots-3.png", 
+       plot = price_scatterplots, 
+       device = "png", 
+       width = 10, 
+       height = 6)
+```

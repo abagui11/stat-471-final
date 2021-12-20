@@ -1,0 +1,76 @@
+---
+title: "4 - Tree Modeling"
+---
+
+```{r, message = FALSE}
+#get libraries
+library(randomForest)   
+library(tidyverse)
+```
+
+```{r}
+# read in the train data for random forest fitting
+crypto_train = read_csv("../Data/clean/crypto_train.csv")
+
+rf_fit = randomForest(price ~ ., data = crypto_train)
+plot(rf_fit)
+```
+#Tuning the Random Forest
+
+```{r}
+rf_3 = randomForest(price ~ ., mtry = 3, data = crypto_train)
+rf_6 = randomForest(price ~ ., mtry = 6, data = crypto_train)
+rf_13 = randomForest(price ~ ., mtry = 13, data = crypto_train)
+```
+
+```{r}
+#extracting OOB errors
+oob_errors = bind_rows(
+  tibble(ntree = 1:500, oob_err = rf_3$mse, m = 3),
+  tibble(ntree = 1:500, oob_err = rf_6$mse, m = 6),
+  tibble(ntree = 1:500, oob_err = rf_13$mse, m = 13)
+)
+oob_errors  
+```
+```{r}
+#plotting oob errors
+oob_errors %>%
+  ggplot(aes(x = ntree, y = oob_err, colour = factor(m))) +
+  geom_line() + theme_bw()
+```
+
+```{r}
+# might want to cache this chunk!
+mvalues = seq(1,13, by = 2)
+oob_errors = numeric(length(mvalues))
+ntree = 500
+for(idx in 1:length(mvalues)){
+  m = mvalues[idx]
+  rf_fit = randomForest(price ~ ., mtry = m, data = crypto_train)
+  oob_errors[idx] = rf_fit$mse[ntree]
+}
+tibble(m = mvalues, oob_err = oob_errors) %>%
+  ggplot(aes(x = m, y = oob_err)) + 
+  geom_line() + geom_point() + 
+  scale_x_continuous(breaks = mvalues) +
+  theme_bw()
+
+```
+#Variable importance
+
+```{r}
+rf_fit = randomForest(price ~ ., mtry = 3, importance = TRUE, data = crypto_train)
+varImpPlot(rf_fit)
+```
+## Making predictions 
+
+We can make predictions using `predict`, as usual:
+```{r}
+#loading test data
+crypto_test = read_csv("../Data/clean/crypto_test.csv")
+rf_predictions = predict(rf_fit, newdata = crypto_test)
+```
+We can compute the mean-squared prediction error as usual too:
+```{r}
+mean((rf_predictions - crypto_test$price)^2)
+```
