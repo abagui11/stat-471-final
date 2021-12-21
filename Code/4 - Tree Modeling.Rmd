@@ -13,7 +13,8 @@ library(tidyverse)
 crypto_train = read_csv("../Data/clean/crypto_train.csv")
 
 rf_fit = randomForest(price ~ ., data = crypto_train)
-plot(rf_fit)
+rf_error_plot = plot(rf_fit)
+
 ```
 #Tuning the Random Forest
 
@@ -34,9 +35,15 @@ oob_errors
 ```
 ```{r}
 #plotting oob errors
-oob_errors %>%
+oob_errors_plot = oob_errors %>%
   ggplot(aes(x = ntree, y = oob_err, colour = factor(m))) +
   geom_line() + theme_bw()
+
+ggsave(filename = "../Results/oob-errors-plot.png", 
+       plot = oob_errors_plot, 
+       device = "png", 
+       width = 5, 
+       height = 3)
 ```
 
 ```{r}
@@ -49,6 +56,7 @@ for(idx in 1:length(mvalues)){
   rf_fit = randomForest(price ~ ., mtry = m, data = crypto_train)
   oob_errors[idx] = rf_fit$mse[ntree]
 }
+
 tibble(m = mvalues, oob_err = oob_errors) %>%
   ggplot(aes(x = m, y = oob_err)) + 
   geom_line() + geom_point() + 
@@ -61,6 +69,7 @@ tibble(m = mvalues, oob_err = oob_errors) %>%
 ```{r}
 rf_fit = randomForest(price ~ ., mtry = 3, importance = TRUE, data = crypto_train)
 varImpPlot(rf_fit)
+importance(rf_fit)
 ```
 ## Making predictions 
 

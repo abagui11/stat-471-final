@@ -1,0 +1,45 @@
+---
+title: "5 - Model-Evaluation"
+---
+
+```{r}
+# load libraries
+library(glmnetUtils)
+library(tidyverse)
+
+# load test data
+crypto_test = read_csv("../Data/clean/crypto_test.csv")
+
+### Test set evaluation
+```
+
+```{r}
+linear_predictions = predict(lm_fit, 
+                            newdata = crypto_test) %>% as.numeric()
+RMSE1 = sqrt(mean((linear_predictions - crypto_test$price)^2))
+RMSE1
+```
+
+
+```{r}
+ridge_predictions = predict(ridge_fit, 
+                            newdata = crypto_test,
+                            s = "lambda.1se") %>% as.numeric()
+RMSE2 = sqrt(mean((ridge_predictions - crypto_test$price)^2))
+RMSE2
+```
+
+
+```{r}
+lasso_predictions = predict(lasso_fit, 
+                            newdata = crypto_test,
+                            s = "lambda.1se") %>% as.numeric()
+RMSE3 = sqrt(mean((lasso_predictions - crypto_test$price)^2))
+RMSE3
+```
+**RMSE3 = 2634.94**
+
+```{r}
+tibble(Method = c("Linear", "Ridge", "Lasso"), `Test RMSE` = c(RMSE1, RMSE2, RMSE3)) %>%
+  write_tsv("../Results/model-evaluation.tsv")
+```

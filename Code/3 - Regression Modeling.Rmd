@@ -19,6 +19,7 @@ lm_fit = lm(price ~ .,
                        data = crypto_train)
 #Getting its summary
 summary(lm_fit)
+plot(lm_fit)
 ```
 **The features explain 0.98 of the variation of the response based on the R-Squared value that was obtained in the linear fit above.**
 
@@ -47,7 +48,7 @@ ggsave(filename = "../Results/ridge-MSE.png",
 
 ```{r ridge-coefficients"}
 #Visualizing fitted coefficients
-ridge_glmnet = plot_glmnet(ridge_fit, crypto_train, features_to_plot = 6)
+ridge_plot = plot_glmnet(ridge_fit, crypto_train, features_to_plot = 6)
 
 ggsave(filename = "../Results/ridge-glmnet.png", 
        plot = ridge_plot, 
@@ -75,7 +76,7 @@ ggsave(filename = "../Results/lasso-MSE.png",
 
 ```{r lasso-coefficients}
 #Visualizing fitted coefficients
-lasso_glmnet = plot_glmnet(lasso_fit, crypto_train, features_to_plot = 6)
+plot_glmnet(lasso_fit, crypto_train, features_to_plot = 6)
 
 ggsave(filename = "../Results/lasso-glmnet.png", 
        plot = lasso_glmnet, 
